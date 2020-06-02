@@ -1,15 +1,10 @@
 import express from 'express';
+import routes from './routes'
 
 const app = express()
+app.use(express.json())
 
-app.get('/users', (request, response) => {
-    console.log('Server working')
+app.use(routes)
 
-    response.json([
-        "Augusto",
-        "Caio",
-        "Samuel"
-    ])
-})
-
-app.listen(3330)
+app.listen(3330);
+console.log('Server started on port 3330 ༼ つ ◕_◕ ༽つ')
