@@ -8,7 +8,9 @@ const pointController = new PointsController()
 const itemsController = new ItemsController()
 
 routes.get('/items', itemsController.index);
+
 routes.get('/points/:id', pointController.show);
+routes.get('/points', pointController.index);
 routes.post('/points', pointController.create);
 
 export default routes;

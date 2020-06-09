@@ -8,7 +8,7 @@ export default class PointsController{
         const trx = await knex.transaction()
 
         const point = {
-            image: 'image-fake',
+            image: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=600&q=60',
             name, 
             email, 
             whatsapp, 
@@ -30,6 +30,8 @@ export default class PointsController{
         })
     
         await trx('point_items').insert(pointItems)
+
+        await trx.commit()
     
         return response.json({
             id: point_id,
@@ -52,5 +54,20 @@ export default class PointsController{
         .where('point_items.point_id', id)
 
         return response.json({point, items})
+    } 
+
+    async index(request: Request, response: Response){
+        const {city, uf, items} = request.query 
+
+        const parsedItems =  String(items).split(',').map(item => Number(item.trim()))
+
+        const points = await knex('points').join('point_items', 'points.id', '=', 'point_items.point_id')
+        .whereIn('point_items.item_id', parsedItems)
+        .where('city', String(city))
+        .where('uf', String(uf))
+        .distinct()
+        .select('points.*')
+
+        return response.json(points)
     } 
 }
